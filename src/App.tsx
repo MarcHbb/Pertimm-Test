@@ -1,17 +1,30 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from 'react-router-dom';
+import Register from './pages/register/Register';
+import Home from './pages/home/Home';
+import Login from './pages/login/Login';
 
-const App: React.FC = () => {
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const isAuthenticated = !!localStorage.getItem('token');
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
+
+const App = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
         <Route
-          path="/"
+          path="/home"
           element={
-            <div className="flex min-h-screen items-center justify-center bg-gray-100">
-              <h1 className="text-3xl font-bold text-green-700">
-                Hello World from Saurabh!
-              </h1>
-            </div>
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
           }
         />
         <Route
